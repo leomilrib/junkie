@@ -15,11 +15,14 @@ get '/' do
 end
 
 get '/auth' do
-  redirect '/auth.callback'
+  logout
+  state = create_session_state
+  session[:state] = state
+  redirect "#{github_oath_path(state)}"
 end
 
 get '/auth.callback' do
-  session[:user] = {id: 1, name: 'leo'}
+  session[:user] = {id: 1, name: ''}
   redirect '/'
 end
 
