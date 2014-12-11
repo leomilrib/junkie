@@ -2,4 +2,8 @@ source "https://rubygems.org"
 
 ruby "2.1.4"
 
-gem 'sinatra', '1.1.0'
+gem 'sinatra'
+gem 'octokit'
+gem 'json'
+gem 'httparty'
+gem 'evil_icons'
