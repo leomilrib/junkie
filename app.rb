@@ -9,6 +9,7 @@ require "./app"
 helpers EvilIcons::Helpers
 
 enable :sessions
+set :session_secret, (ENV["SESSION_SECRET"] || "this is session secret")
 
 get '/' do
   if session[:user]
@@ -38,7 +39,7 @@ get '/auth.callback' do
       :body => {
         :client_id => ENV["GITHUB_APP_ID"],
         :client_secret => ENV["GITHUB_APP_SECRET"],
-        :code => code
+        :code => params[:code]
       },
       :headers => {
         "Accept" => "application/json"
@@ -48,7 +49,7 @@ get '/auth.callback' do
     if result.code == 200
       begin
         token = JSON.parse(result.body)["access_token"]
-        client = Octokit::Client.new(oauth_token: token)
+        client = Octokit::Client.new(access_token: token)
       rescue => e
         error_and_back "github auth error"
       end
