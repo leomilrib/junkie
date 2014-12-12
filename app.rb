@@ -39,7 +39,7 @@ get '/auth.callback' do
       :body => {
         :client_id => ENV["GITHUB_APP_ID"],
         :client_secret => ENV["GITHUB_APP_SECRET"],
-        :code => code
+        :code => params[:code]
       },
       :headers => {
         "Accept" => "application/json"
