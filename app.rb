@@ -49,7 +49,7 @@ get '/auth.callback' do
     if result.code == 200
       begin
         token = JSON.parse(result.body)["access_token"]
-        client = Octokit::Client.new(oauth_token: token)
+        client = Octokit::Client.new(access_token: token)
       rescue => e
         error_and_back "github auth error"
       end
