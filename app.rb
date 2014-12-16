@@ -2,11 +2,8 @@ require 'sinatra'
 require 'octokit'
 require 'httparty'
 require 'json'
-require 'evil_icons'
 require './app_helpers'
 require "./app"
-
-helpers EvilIcons::Helpers
 
 enable :sessions
 set :session_secret, (ENV["SESSION_SECRET"] || "this is session secret")
@@ -63,3 +60,7 @@ get '/auth.callback' do
   end
   redirect '/'
 end
+
+# get '/about' do
+#  erb :'about'
+# end
