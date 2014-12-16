@@ -1,8 +1,42 @@
+<%
+
+  pulls = ['pull-1', 'pull-2', 'pull-3', 'pull-4']
+
+%>
+
+<div class="row">
+  <div class="one-third column">
+    <a href="/logout">Logout</a>
+  </div>
+  <div class="two-thirds column">
+    <h3><%= "Pulls from #{session[:login]}" %></h3>
+  </div>
+</div>
+
 <div class="row">
   <div class="twelve columns">
-    <p><%= "Pulls from #{session[:login]}" %></p>
-    <a href="/logout">Logout</a>
-    <a href="/auth">Login on GitHub</a>
+    <table class="u-full-width">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Organization</th>
+          <th>Repo</th>
+          <th>Author</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% pulls.each do |pull| %>
+          <tr>
+             <td><%= pull %></td>
+             <td><%= pull %></td>
+             <td><%= pull %></td>
+             <td><%= pull %></td>
+             <td><%= pull %></td>
+           </tr>
+        <% end %>
+      </tbody>
+    </table>
   </div>
 </div>
 

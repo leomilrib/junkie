@@ -1,4 +1,5 @@
 require 'sinatra'
+require 'sinatra/flash'
 require 'octokit'
 require 'httparty'
 require 'json'
