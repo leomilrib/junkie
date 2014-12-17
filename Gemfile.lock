@@ -2,36 +2,50 @@ GEM
   remote: https://rubygems.org/
   specs:
     addressable (2.3.6)
-    evil_icons (1.1.0)
-      nokogiri
+    bond (0.5.1)
     faraday (0.9.0)
       multipart-post (>= 1.2, < 3)
     httparty (0.13.3)
       json (~> 1.8)
       multi_xml (>= 0.5.2)
     json (1.8.1)
-    mini_portile (0.6.1)
     multi_xml (0.5.5)
     multipart-post (2.0.0)
-    nokogiri (1.6.5)
-      mini_portile (~> 0.6.0)
+    netrc (0.10.1)
     octokit (3.7.0)
       sawyer (~> 0.6.0, >= 0.5.3)
     rack (1.5.2)
+    rack-test (0.6.2)
+      rack (>= 1.0)
+    ripl (0.7.1)
+      bond (~> 0.5.1)
+    ripl-multi_line (0.3.1)
+      ripl (>= 0.3.6)
+    ripl-rack (0.2.1)
+      rack (>= 1.0)
+      rack-test (~> 0.6.2)
+      ripl (>= 0.7.0)
     sawyer (0.6.0)
       addressable (~> 2.3.5)
       faraday (~> 0.8, < 0.10)
-    sinatra (1.1.0)
+    sinatra (1.2.1)
       rack (~> 1.1)
-      tilt (~> 1.1)
+      tilt (>= 1.2.2, < 2.0)
+      tilt (>= 1.2.2, < 2.0)
     tilt (1.4.1)
+    tux (0.3.0)
+      ripl (>= 0.3.5)
+      ripl-multi_line (>= 0.2.4)
+      ripl-rack (>= 0.2.0)
+      sinatra (>= 1.2.1)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  evil_icons
   httparty
   json
+  netrc (~> 0.10.1)
   octokit
-  sinatra
+  sinatra (= 1.2.1)
+  tux

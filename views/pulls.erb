@@ -1,20 +1,29 @@
 <%
+  begin
+    client = Octokit::Client.new(:netrc => true)
+  rescue => e
+    error_and_back 'GitHub auth error...'
+  end
 
-  pulls = ['pull-1', 'pull-2', 'pull-3', 'pull-4']
+  session[:user] = client.user.login
 
+  pulls = client.pulls('user/repo')
 %>
+
+
 
 <div class="row">
   <div class="one-third column">
     <a href="/logout">Logout</a>
   </div>
   <div class="two-thirds column">
-    <h3><%= "Pulls from #{session[:login]}" %></h3>
+    <h3><%= "Pulls from #{session[:user]}" %></h3>
   </div>
 </div>
 
 <div class="row">
   <div class="twelve columns">
+
     <table class="u-full-width">
       <thead>
         <tr>
@@ -28,12 +37,12 @@
       <tbody>
         <% pulls.each do |pull| %>
           <tr>
-             <td><%= pull %></td>
-             <td><%= pull %></td>
-             <td><%= pull %></td>
-             <td><%= pull %></td>
-             <td><%= pull %></td>
-           </tr>
+            <td><%= pull[:name] %></td>
+            <td><%= pull[:organization] %></td>
+            <td><%= pull[:repository] %></td>
+            <td><%= pull[:author] %></td>
+            <td><%= pull[:updated_at] %></td>
+          </tr>
         <% end %>
       </tbody>
     </table>

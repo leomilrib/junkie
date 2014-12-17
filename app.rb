@@ -10,6 +10,7 @@ enable :sessions
 set :session_secret, (ENV["SESSION_SECRET"] || "this is session secret")
 
 get '/' do
+   session[:user] = 1
   if session[:user]
     erb :'pulls'
   else
@@ -49,7 +50,7 @@ get '/auth.callback' do
         token = JSON.parse(result.body)["access_token"]
         client = Octokit::Client.new(access_token: token)
       rescue => e
-        error_and_back "github auth error"
+        error_and_back "GitHub auth error..."
       end
 
       session[:token] = token
