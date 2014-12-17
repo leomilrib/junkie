@@ -4,13 +4,12 @@ require 'octokit'
 require 'httparty'
 require 'json'
 require './app_helpers'
-require "./app"
 
 enable :sessions
 set :session_secret, (ENV["SESSION_SECRET"] || "this is session secret")
 
 get '/' do
-   session[:user] = 1
+  session[:user] = "leomilrib"
   if session[:user]
     erb :'pulls'
   else
@@ -66,3 +65,4 @@ end
 # get '/about' do
 #  erb :'about'
 # end
+
