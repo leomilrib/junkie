@@ -1,51 +1,52 @@
 <%
-  begin
-    client = Octokit::Client.new(:netrc => true)
-  rescue => e
-    error_and_back 'GitHub auth error...'
-  end
-
-  session[:user] = client.user.login
-
-  pulls = client.pulls('user/repo')
+  orgs = @client.orgs
 %>
-
-
 
 <div class="row">
   <div class="one-third column">
     <a href="/logout">Logout</a>
   </div>
   <div class="two-thirds column">
-    <h3><%= "Pulls from #{session[:user]}" %></h3>
+    <h2><%= "Pulls from #{session[:user]}" %></h2>
   </div>
 </div>
 
 <div class="row">
   <div class="twelve columns">
-
-    <table class="u-full-width">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Organization</th>
-          <th>Repo</th>
-          <th>Author</th>
-          <th>Date</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% pulls.each do |pull| %>
+    <% orgs.each do |org| %>
+      <h3><%= "#{org.login}" %></h3>
+      <%
+        repos = @client.org_repositories(org[:login])
+        pulls = repos.map{ |repo|
+          p = @client.pulls("#{org[:login]}/#{repo[:name]}")
+          p unless p.empty?
+        }.flatten.compact
+      %>
+      <table class="u-full-width">
+        <thead>
           <tr>
-            <td><%= pull[:name] %></td>
-            <td><%= pull[:organization] %></td>
-            <td><%= pull[:repository] %></td>
-            <td><%= pull[:author] %></td>
-            <td><%= pull[:updated_at] %></td>
+            <th>Name</th>
+            <th>Repo</th>
+            <th>Author</th>
+            <th>Date</th>
           </tr>
-        <% end %>
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          <% pulls.each do |pull| %>
+            <tr>
+              <td>
+                <a href="<%= pull[:html_url] %>">
+                  <%= pull[:title] %>
+                </a>
+              </td>
+              <td><%= pull[:full_name] %></td>
+              <td><%= pull[:user] %></td>
+              <td><%= pull[:updated_at] %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
   </div>
 </div>
 
