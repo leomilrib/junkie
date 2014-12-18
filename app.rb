@@ -1,15 +1,16 @@
 require 'sinatra'
+require 'sinatra/flash'
 require 'octokit'
 require 'httparty'
 require 'json'
 require './app_helpers'
-require "./app"
 
 enable :sessions
 set :session_secret, (ENV["SESSION_SECRET"] || "this is session secret")
 
 get '/' do
   if session[:user]
+    @client = set_client
     erb :'pulls'
   else
     erb :'login'
@@ -23,9 +24,14 @@ end
 
 get '/auth' do
   logout
-  state = create_session_state
-  session[:state] = state
-  redirect "#{github_oath_path(state)}"
+  if settings.development?
+    client = set_client
+    redirect '/'
+  else
+    state = create_session_state
+    session[:state] = state
+    redirect "#{github_oath_path(state)}"
+  end
 end
 
 get '/auth.callback' do
@@ -44,18 +50,8 @@ get '/auth.callback' do
     }
     result = HTTParty.post("https://github.com/login/oauth/access_token", query)
     if result.code == 200
-      begin
-        token = JSON.parse(result.body)["access_token"]
-        client = Octokit::Client.new(access_token: token)
-      rescue => e
-        error_and_back "github auth error"
-      end
-
-      session[:token] = token
-      session[:user] = client.user
-      session[:login] = client.user.login
-      session[:avatar] = client.user.avatar_url
-      session[:user_id] = client.user.id
+      session[:token] = JSON.parse(result.body)["access_token"]
+      client = set_client
     end
   end
   redirect '/'
@@ -64,3 +60,4 @@ end
 # get '/about' do
 #  erb :'about'
 # end
+
