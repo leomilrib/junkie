@@ -2,6 +2,7 @@ helpers do
   def logout
     return unless session[:user]
     session[:user] = nil
+    session[:token] = nil
   end
 
   def app_root
@@ -29,4 +30,20 @@ helpers do
     redirect '/'
   end
 
+  def set_client
+    begin
+      if settings.development?
+        client = Octokit::Client.new(:netrc => true)
+      else
+        client = Octokit::Client.new(access_token: session[:token])
+      end
+    rescue => e
+      error_and_back 'GitHub auth error...'
+    end
+
+    session[:user] = client.user.login
+    session[:avatar] = client.user.avatar_url
+    session[:user_id] = client.user.id
+    client
+  end
 end
