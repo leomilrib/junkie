@@ -2,8 +2,9 @@
 
 <div class="row">
   <div class="one-third column">
-    <p><%= "Logged as #{session[:user]} | " %></p>
-    <a href="/logout">Logout</a>
+    <p>
+      <%= "Logged as #{session[:user]} | " %><a href="/logout">Logout</a>
+    </p>
   </div>
   <div class="two-thirds column">
     <h2><%= "Open Pull Requests" %></h2>
