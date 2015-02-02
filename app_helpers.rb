@@ -47,4 +47,7 @@ helpers do
     session[:user_id] = client.user.id
     client
   end
+
+  def can_merge_it?(issue_comments)
+  end
 end
