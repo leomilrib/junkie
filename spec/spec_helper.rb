@@ -12,6 +12,7 @@ end
 RSpec.configure { |c|
   c.include RSpecMixin
   c.include Capybara::DSL
+  c.include Helpers
 }
 
 Capybara.app = Sinatra::Application
