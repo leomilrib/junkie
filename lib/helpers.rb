@@ -49,14 +49,12 @@ module Helpers
   end
 
   def can_merge_it?(issue_comments)
-    all_comments = issue_comments.map { |ic|
-      "<comment>#{ic[:body]}</comment>"
+    ships_regex = /((:\+1:).)|((:shipit:).)/
+
+    approves = issue_comments.select { |ic|
+      ships_regex.match ic[:body]
     }
 
-    return false if all_comments.size < 2
-
-    ocurrences = /(<comment>.*:\+1:.*<\/comment>)./.match(all_comments.join).size
-
-    (ocurrences > 1) ? true : false
+    approves.size > 1 ? true : false
   end
 end
