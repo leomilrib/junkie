@@ -71,8 +71,7 @@ describe 'app' do
   }
 
   it 'returns true if pull can be merged' do
-    # require 'pry'; binding.pry
     result = can_merge_it?(octo_client.issue_comments('org/repo',666))
-    expect(result).to be_true
+    expect(result).to be_truthy
   end
 end

@@ -49,5 +49,14 @@ module Helpers
   end
 
   def can_merge_it?(issue_comments)
+    all_comments = issue_comments.map { |ic|
+      "<comment>#{ic[:body]}</comment>"
+    }
+
+    return false if all_comments.size < 2
+
+    ocurrences = /(<comment>.*:\+1:.*<\/comment>)./.match(all_comments.join).size
+
+    (ocurrences > 1) ? true : false
   end
 end
