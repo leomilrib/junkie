@@ -34,7 +34,15 @@
         <tbody>
           <% pulls.each do |pull| %>
             <tr>
-              <td><%= can_merge_it?(@client.issue_comments(pull[:head][:repo][:full_name], pull[:number])) %></td>
+              <td>
+                <%=
+                  begin
+                    can_merge_it?(@client.issue_comments(pull[:head][:repo][:full_name], pull[:number]))
+                  rescue
+                    '404 =('
+                  end
+                %>
+              </td>
               <td>
                 <a href="<%= pull[:html_url] %>">
                   <%= pull[:title] %>
