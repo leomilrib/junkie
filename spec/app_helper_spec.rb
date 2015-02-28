@@ -1,4 +1,4 @@
-describe 'app' do
+describe 'app_helper' do
   let(:octo_client_ready) {
     instance_double('Octokit::Client',
       issue_comments: [

@@ -48,6 +48,16 @@ module Helpers
     client
   end
 
+  def reviewed_it?(issue_comments)
+    ships_regex = /((:\+1:).)|((:shipit:).)/
+
+    approves = issue_comments.select { |ic|
+      ships_regex.match ic[:body]
+    }
+
+    approves.size > 1 ? true : false
+  end
+
   def can_merge_it?(issue_comments)
     ships_regex = /((:\+1:).)|((:shipit:).)/
 

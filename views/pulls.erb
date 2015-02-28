@@ -1,5 +1,3 @@
-<% orgs = @client.orgs %>
-
 <div class="row">
   <div class="one-third column">
     <p>
@@ -13,15 +11,8 @@
 
 <div class="row">
   <div class="twelve columns">
-    <% orgs.each do |org| %>
-      <h3><%= "#{org.login}" %></h3>
-      <%
-        repos = @client.org_repositories(org[:login])
-        pulls = repos.map{ |repo|
-          p = @client.pulls("#{org[:login]}/#{repo[:name]}")
-          p unless p.empty?
-        }.flatten.compact
-      %>
+    <% @orgs_pulls.each do |pulls| %>
+      <h3><%= "#{pulls.owner.login}" %></h3>
       <table class="u-full-width">
         <thead>
           <tr>
