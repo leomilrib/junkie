@@ -141,6 +141,16 @@ describe 'app_helper' do
     )
   }
 
+  before {
+    Octokit::Client.any_instance.stub(:user).and_return({
+      login: "user",
+      id: 666667,
+      type: "User"
+    })
+
+    @client = Octokit::Client.new
+  }
+
   it 'returns true if pull can be merged' do
     result = can_merge_it?(octo_client_ready.issue_comments('org/repo',666))
 
@@ -154,8 +164,14 @@ describe 'app_helper' do
   end
 
   it "returns false if you didn't reviewed yet" do
+    result = reviewed_it?(octo_client_not_ready.issue_comments('org/repo',666))
+
+    expect(result).to be_falsey
   end
 
   it "returns true if you reviewed it" do
+    result = reviewed_it?(octo_client_ready.issue_comments('org/repo',666))
+
+    expect(result).to be_truthy
   end
 end

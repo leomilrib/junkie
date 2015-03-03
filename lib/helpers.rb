@@ -60,22 +60,19 @@ module Helpers
 
   def reviewed_it?(issue_comments)
     ships_regex = /((:\+1:).)|((:shipit:).)/
-
-    approves = issue_comments.select { |ic|
-      ships_regex.match ic[:body]
+    ready = issue_comments.select { |ic|
+      (ic[:user][:id] == @client.user[:id]) && ships_regex.match(ic[:body])
     }
 
-    approves.size > 1 ? true : false
+    ready.size > 0 ? true : false
   end
 
   def comments?(issue_comments)
-    ships_regex = /((:\+1:).)|((:shipit:).)/
-
     approves = issue_comments.select { |ic|
       ships_regex.match ic[:body]
     }
 
-    approves.size > 1 ? true : false
+    approves.size > 0 ? true : false
   end
 
   def icon_merge(repo,number)
