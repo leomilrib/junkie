@@ -13,3 +13,8 @@ group :developmnet do
   gem 'netrc'
   gem 'pry'
 end
+
+group :test do
+  gem 'rspec'
+  gem 'capybara'
+end

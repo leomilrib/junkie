@@ -11,6 +11,15 @@ set :session_secret, (ENV["SESSION_SECRET"] || "this is session secret")
 get '/' do
   if session[:user]
     @client = set_client
+    orgs = @client.orgs
+    repos = orgs.map{ |org|
+      @client.org_repositories(org[:login])
+    }.flatten
+    @orgs_pulls = repos.map{ |repo|
+      p = @client.pulls("#{repo[:owner][:login]}/#{repo[:name]}")
+      p unless p.empty?
+    }.flatten.compact.group_by{ |op| op.base.repo.owner.login }
+
     erb :'pulls'
   else
     erb :'login'
@@ -56,8 +65,3 @@ get '/auth.callback' do
   end
   redirect '/'
 end
-
-# get '/about' do
-#  erb :'about'
-# end
-

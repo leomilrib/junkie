@@ -1,9 +1,8 @@
-<% orgs = @client.orgs %>
-
 <div class="row">
   <div class="one-third column">
-    <p><%= "Logged as #{session[:user]} | " %></p>
-    <a href="/logout">Logout</a>
+    <p>
+      <%= "Logged as #{session[:user]} | " %><a href="/logout">Logout</a>
+    </p>
   </div>
   <div class="two-thirds column">
     <h2><%= "Open Pull Requests" %></h2>
@@ -12,19 +11,19 @@
 
 <div class="row">
   <div class="twelve columns">
-    <% orgs.each do |org| %>
-      <h3><%= "#{org.login}" %></h3>
-      <%
-        repos = @client.org_repositories(org[:login])
-        pulls = repos.map{ |repo|
-          p = @client.pulls("#{org[:login]}/#{repo[:name]}")
-          p unless p.empty?
-        }.flatten.compact
-      %>
+    <% @orgs_pulls.each do |org, pulls| %>
+      <h3><%= "#{org}" %></h3>
       <table class="u-full-width">
         <thead>
           <tr>
-            <th>Name</th>
+            <th>
+              <span class="icon merge" title="merge?"></span>
+              <span class="icon review" title="review?"></span>
+              <span class="icon comment" title="comments?"></span>
+            </th>
+            <th>
+              <span>Name</span>
+            </th>
             <th>Repo</th>
             <th>Author</th>
             <th>Last Update</th>
@@ -33,6 +32,19 @@
         <tbody>
           <% pulls.each do |pull| %>
             <tr>
+              <td>
+                <div>
+                  <span title="merge?">
+                    <%= icon_merge(pull[:head][:repo][:full_name], pull[:number]) %>
+                  </span>
+                  <span title="review?">
+                    <%=  icon_review(pull[:head][:repo][:full_name], pull[:number]) %>
+                  </span>
+                  <span title="comments?">
+                    <%=  icon_comment(pull[:head][:repo][:full_name], pull[:number]) %>
+                  </span>
+                </div>
+              </td>
               <td>
                 <a href="<%= pull[:html_url] %>">
                   <%= pull[:title] %>
