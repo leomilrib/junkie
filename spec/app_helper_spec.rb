@@ -152,4 +152,10 @@ describe 'app_helper' do
 
     expect(result).to be_falsey
   end
+
+  it "returns false if you didn't reviewed yet" do
+  end
+
+  it "returns true if you reviewed it" do
+  end
 end

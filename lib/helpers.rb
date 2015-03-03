@@ -48,6 +48,16 @@ module Helpers
     client
   end
 
+  def can_merge_it?(issue_comments)
+    ships_regex = /((:\+1:).)|((:shipit:).)/
+
+    approves = issue_comments.select { |ic|
+      ships_regex.match ic[:body]
+    }
+
+    approves.size > 1 ? true : false
+  end
+
   def reviewed_it?(issue_comments)
     ships_regex = /((:\+1:).)|((:shipit:).)/
 
@@ -58,7 +68,7 @@ module Helpers
     approves.size > 1 ? true : false
   end
 
-  def can_merge_it?(issue_comments)
+  def comments?(issue_comments)
     ships_regex = /((:\+1:).)|((:shipit:).)/
 
     approves = issue_comments.select { |ic|
@@ -66,5 +76,29 @@ module Helpers
     }
 
     approves.size > 1 ? true : false
+  end
+
+  def icon_merge(repo,number)
+    begin
+      can_merge_it?(@client.issue_comments(repo, number))
+    rescue
+      '404'
+    end
+  end
+
+  def icon_review(repo,number)
+    begin
+      reviewed_it?(@client.issue_comments(repo, number))
+    rescue
+      '404'
+    end
+  end
+
+  def icon_comment(repo,number)
+    begin
+      comments?(@client.issue_comments(repo, number))
+    rescue
+      '404'
+    end
   end
 end

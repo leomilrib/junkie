@@ -16,7 +16,14 @@
       <table class="u-full-width">
         <thead>
           <tr>
-            <th colspan="2">Name</th>
+            <th>
+              <span class="icon merge" title="merge?"></span>
+              <span class="icon review" title="review?"></span>
+              <span class="icon comment" title="comments?"></span>
+            </th>
+            <th>
+              <span>Name</span>
+            </th>
             <th>Repo</th>
             <th>Author</th>
             <th>Last Update</th>
@@ -26,6 +33,17 @@
           <% pulls.each do |pull| %>
             <tr>
               <td>
+                <div>
+                  <span title="merge?">
+                    <%= icon_merge(pull[:head][:repo][:full_name], pull[:number]) %>
+                  </span>
+                  <span title="review?">
+                    <%=  icon_review(pull[:head][:repo][:full_name], pull[:number]) %>
+                  </span>
+                  <span title="comments?">
+                    <%=  icon_comment(pull[:head][:repo][:full_name], pull[:number]) %>
+                  </span>
+                </div>
               </td>
               <td>
                 <a href="<%= pull[:html_url] %>">
