@@ -11,8 +11,8 @@
 
 <div class="row">
   <div class="twelve columns">
-    <% @orgs_pulls.each do |pulls| %>
-      <h3><%= "#{pulls.owner.login}" %></h3>
+    <% @orgs_pulls.each do |org, pulls| %>
+      <h3><%= "#{org}" %></h3>
       <table class="u-full-width">
         <thead>
           <tr>
@@ -26,13 +26,6 @@
           <% pulls.each do |pull| %>
             <tr>
               <td>
-                <%=
-                  begin
-                    can_merge_it?(@client.issue_comments(pull[:head][:repo][:full_name], pull[:number]))
-                  rescue
-                    '404 =('
-                  end
-                %>
               </td>
               <td>
                 <a href="<%= pull[:html_url] %>">
