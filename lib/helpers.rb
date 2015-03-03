@@ -67,12 +67,8 @@ module Helpers
     ready.size > 0 ? true : false
   end
 
-  def comments?(issue_comments)
-    approves = issue_comments.select { |ic|
-      ships_regex.match ic[:body]
-    }
-
-    approves.size > 0 ? true : false
+  def comments?(pull_comments)
+    pull_comments.size > 0 ? true : false
   end
 
   def icon_merge(repo,number)
@@ -93,7 +89,7 @@ module Helpers
 
   def icon_comment(repo,number)
     begin
-      comments?(@client.issue_comments(repo, number))
+      comments?(@client.pull_comments(repo, number))
     rescue
       '404'
     end
