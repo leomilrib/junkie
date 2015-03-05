@@ -12,6 +12,14 @@ span.icon {
   margin: 3px;
 }
 
+span.icon.ready {
+  background-color: green;
+}
+
+span.icon.pending {
+  background-color: red;
+}
+
 span.icon.merge {
   background-image: url('/images/git-merge.png')
 }
@@ -22,4 +30,16 @@ span.icon.review {
 
 span.icon.comment {
   background-image: url('/images/comments.png')
+}
+
+span.icon.alpha.merge {
+  background-image: url('/images/git-merge-alpha.png')
+}
+
+span.icon.alpha.review {
+  background-image: url('/images/thumbs-up-alpha.png')
+}
+
+span.icon.alpha.comment {
+  background-image: url('/images/comments-alpha.png')
 }
