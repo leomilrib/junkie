@@ -19,14 +19,24 @@ Octokit.middleware = stack
 get '/' do
   if session[:user]
     @client = set_client
-    orgs = @client.orgs
-    repos = orgs.map{ |org|
-      @client.org_repositories(org[:login])
-    }.flatten
-    @orgs_pulls = repos.map{ |repo|
-      p = @client.pulls("#{repo[:owner][:login]}/#{repo[:name]}")
-      p unless p.empty?
-    }.flatten.compact.group_by{ |op| op.base.repo.owner.login }
+    orgs = Thread.new { @client.orgs }
+    repos_th = orgs.value.flat_map { |org|
+      Thread.new {
+        @client.org_repositories(org.login)
+      }
+    }
+
+    orgs_pulls_th = repos_th.flat_map { |repo_th|
+      Thread.new {
+        repo_th.value.flat_map { |repo|
+          @client.pulls("#{repo[:owner][:login]}/#{repo[:name]}")
+        }
+      }
+    }
+
+    @orgs_pulls = orgs_pulls_th.flat_map(&:value).group_by{ |op|
+      op.base.repo.owner.login
+    }
 
     erb :'pulls'
   else
