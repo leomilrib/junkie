@@ -34,15 +34,12 @@
             <tr>
               <td>
                 <div>
-                  <%= icon_merge(pull) %>
-                  <%= icon_review(pull) %>
-                  <%= icon_comment(pull) %>
-                  <!-- <span class="icon alpha merge ready" title="merge?">
+                  <span class="icon alpha <%= icon_merge(pull) %>" title="merge?">
                   </span>
-                  <span class="icon alpha review pending" title="review?">
+                  <span class="icon alpha <%= icon_review(pull) %>" title="review?">
                   </span>
-                  <span class="icon alpha comment ready" title="comments?">
-                  </span> -->
+                  <span class="icon alpha <%= icon_comment(pull) %>" title="comments?">
+                  </span>
                 </div>
               </td>
               <td>
