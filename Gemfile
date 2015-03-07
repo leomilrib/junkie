@@ -8,6 +8,7 @@ gem 'sinatra-redirect-with-flash'
 gem 'octokit'
 gem 'json'
 gem 'httparty'
+gem 'faraday-http-cache'
 
 group :developmnet do
   gem 'netrc'

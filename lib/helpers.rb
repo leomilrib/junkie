@@ -71,27 +71,15 @@ module Helpers
     pull_comments.size > 0 ? true : false
   end
 
-  def icon_merge(repo,number)
-    begin
-      can_merge_it?(@client.issue_comments(repo, number))
-    rescue
-      '404'
-    end
+  def icon_merge(pull)
+    can_merge_it?(pull[:issue_comments])
   end
 
-  def icon_review(repo,number)
-    begin
-      reviewed_it?(@client.issue_comments(repo, number))
-    rescue
-      '404'
-    end
+  def icon_review(pull)
+    reviewed_it?(pull[:issue_comments])
   end
 
-  def icon_comment(repo,number)
-    begin
-      comments?(@client.pull_comments(repo, number))
-    rescue
-      '404'
-    end
+  def icon_comment(pull)
+    comments?(pull[:pull_comments])
   end
 end

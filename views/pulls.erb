@@ -34,15 +34,15 @@
             <tr>
               <td>
                 <div>
-                  <span title="merge?">
-                    <%= icon_merge(pull[:head][:repo][:full_name], pull[:number]) %>
+                  <%= icon_merge(pull) %>
+                  <%= icon_review(pull) %>
+                  <%= icon_comment(pull) %>
+                  <!-- <span class="icon alpha merge ready" title="merge?">
                   </span>
-                  <span title="review?">
-                    <%=  icon_review(pull[:head][:repo][:full_name], pull[:number]) %>
+                  <span class="icon alpha review pending" title="review?">
                   </span>
-                  <span title="comments?">
-                    <%=  icon_comment(pull[:head][:repo][:full_name], pull[:number]) %>
-                  </span>
+                  <span class="icon alpha comment ready" title="comments?">
+                  </span> -->
                 </div>
               </td>
               <td>
