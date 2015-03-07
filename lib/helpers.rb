@@ -72,14 +72,14 @@ module Helpers
   end
 
   def icon_merge(pull)
-    can_merge_it?(pull[:issue_comments])
+    can_merge_it?(pull[:issue_comments]) ? 'merge ready' : 'merge pending'
   end
 
   def icon_review(pull)
-    reviewed_it?(pull[:issue_comments])
+    reviewed_it?(pull[:issue_comments]) ? 'review ready' : 'review pending'
   end
 
   def icon_comment(pull)
-    comments?(pull[:pull_comments])
+    comments?(pull[:pull_comments]) ? 'comment ready' : 'comment pending'
   end
 end
