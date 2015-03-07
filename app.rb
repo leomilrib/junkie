@@ -25,7 +25,6 @@ get '/' do
         @client.org_repositories(org.login)
       }
     }
-
     orgs_pulls_th = repos_th.flat_map { |repo_th|
       Thread.new {
         repo_th.value.flat_map { |repo|
@@ -33,13 +32,28 @@ get '/' do
         }
       }
     }
+    @orgs_pulls = orgs_pulls_th.flat_map(&:value)
+    @orgs_pulls.each { |org_pull|
+      org_pull[:issue_comments] = begin
+         repo = org_pull[:head][:repo][:full_name]
+         number = org_pull[:number]
+         @client.issue_comments(repo, number)
+      rescue
+         []
+      end
 
-    @orgs_pulls = orgs_pulls_th.flat_map(&:value).group_by{ |op|
-      op.base.repo.owner.login
-    }
+      org_pull[:pull_comments] = begin
+        repo = org_pull[:head][:repo][:full_name]
+        number = org_pull[:number]
+        @client.pull_comments(repo, number)
+      rescue
+        []
+      end
+     }
+     @orgs_pulls = @orgs_pulls.group_by { |op| op.base.repo.owner.login }
 
-    erb :'pulls'
-  else
+     erb :'pulls'
+   else
     erb :'login'
   end
 end
@@ -70,16 +84,16 @@ get '/auth.callback' do
         :client_id => ENV["GITHUB_APP_ID"],
         :client_secret => ENV["GITHUB_APP_SECRET"],
         :code => params[:code]
-      },
-      :headers => {
-        "Accept" => "application/json"
+        },
+        :headers => {
+          "Accept" => "application/json"
+        }
       }
-    }
-    result = HTTParty.post("https://github.com/login/oauth/access_token", query)
-    if result.code == 200
-      session[:token] = JSON.parse(result.body)["access_token"]
-      client = set_client
+      result = HTTParty.post("https://github.com/login/oauth/access_token", query)
+      if result.code == 200
+        session[:token] = JSON.parse(result.body)["access_token"]
+        client = set_client
+      end
     end
+    redirect '/'
   end
-  redirect '/'
-end
