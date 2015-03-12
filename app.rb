@@ -19,20 +19,24 @@ Octokit.middleware = stack
 get '/' do
   if session[:user]
     @client = set_client
-    orgs = Thread.new { @client.orgs }
-    repos_th = orgs.value.flat_map { |org|
-      Thread.new {
-        @client.org_repositories(org.login)
-      }
-    }
-    orgs_pulls_th = repos_th.flat_map { |repo_th|
-      Thread.new {
-        repo_th.value.flat_map { |repo|
-          @client.pulls("#{repo[:owner][:login]}/#{repo[:name]}")
+    orgs_th = Thread.new { @client.orgs }
+    repos_th = Thread.new {
+      orgs_th.value.flat_map { |org|
+        Thread.new {
+          @client.org_repositories(org.login)
         }
       }
     }
-    @orgs_pulls = orgs_pulls_th.flat_map(&:value)
+    orgs_pulls_th = Thread.new {
+      repos_th.value.flat_map { |repo_th|
+        Thread.new {
+          repo_th.value.flat_map { |repo|
+            @client.pulls("#{repo[:owner][:login]}/#{repo[:name]}")
+          }
+        }
+      }
+    }
+    @orgs_pulls = orgs_pulls_th.value.flat_map(&:value)
     @orgs_pulls.each { |org_pull|
       org_pull[:issue_comments] = begin
          repo = org_pull[:head][:repo][:full_name]
