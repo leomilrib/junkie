@@ -49,7 +49,7 @@ module Helpers
   end
 
   def can_merge_it?(issue_comments)
-    ships_regex = /((:\+1:).)|((:shipit:).)/
+    ships_regex = /(:\+1:)|(:shipit:)/
 
     approves = issue_comments.select { |ic|
       ships_regex.match ic[:body]
@@ -59,7 +59,8 @@ module Helpers
   end
 
   def reviewed_it?(issue_comments)
-    ships_regex = /((:\+1:).)|((:shipit:).)/
+    ships_regex = /(:\+1:)|(:shipit:)/
+
     ready = issue_comments.select { |ic|
       (ic[:user][:id] == @client.user[:id]) && ships_regex.match(ic[:body])
     }
