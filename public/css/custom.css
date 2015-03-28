@@ -3,9 +3,20 @@ img.button-github {
   width: auto;
 }
 
+div.icon-container{
+  width: 84px;
+  /*
+    you may ask:
+      "but why 84?"
+    and i would tell you my dear friend:
+      because 42 * 2 = 84 :wink:
+  */
+}
+
 span.icon {
   background-repeat: no-repeat;
   background-size: contain;
+  float: left;
   display: inline-block;
   height: 20px;
   width: 20px;
@@ -13,11 +24,11 @@ span.icon {
 }
 
 span.icon.ready {
-  background-color: green;
+  background-color: #6cc644;
 }
 
 span.icon.pending {
-  background-color: red;
+  background-color: #bd2c00;
 }
 
 span.icon.merge {
