@@ -17,9 +17,11 @@
         <thead>
           <tr>
             <th>
-              <span class="icon merge" title="merge?"></span>
-              <span class="icon review" title="review?"></span>
-              <span class="icon comment" title="comments?"></span>
+              <div class="icon-container">
+                <span class="icon merge" title="merge?"></span>
+                <span class="icon review" title="review?"></span>
+                <span class="icon comment" title="comments?"></span>
+              </div>
             </th>
             <th>
               <span>Name</span>
@@ -33,7 +35,7 @@
           <% pulls.each do |pull| %>
             <tr>
               <td>
-                <div>
+                <div class="icon-container">
                   <span class="icon alpha <%= icon_merge(pull) %>" title="merge?">
                   </span>
                   <span class="icon alpha <%= icon_review(pull) %>" title="review?">
