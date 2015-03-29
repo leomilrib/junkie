@@ -1,7 +1,6 @@
 # [![Junkie Logo](https://dl.dropboxusercontent.com/u/20643759/junkie_new_logo_lines.png)](https://junkie.herokuapp.com) junkie [![Build Status](https://semaphoreci.com/api/v1/projects/95eb4668-01c2-4f92-9ca1-2ebefb595907/374822/shields_badge.svg)](https://semaphoreci.com/leomilrib037/junkie)
-===============
-A simple Sinatra APP to check open Pull Requests on your organizations in one place
 
+A simple Sinatra APP to check open Pull Requests on your organizations in one place
 
 ## Using it
 You can use it by [accessing my herokuapp](http://junkie.herokuapp.com/) version. Please keep it in mind it is running on a free Heroku app, so not so _performatic_. Have some patience.
