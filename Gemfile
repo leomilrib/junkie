@@ -9,6 +9,7 @@ gem 'octokit'
 gem 'json'
 gem 'httparty'
 gem 'faraday-http-cache'
+gem 'unicorn'
 
 group :developmnet do
   gem 'netrc'
