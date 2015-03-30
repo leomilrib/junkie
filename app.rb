@@ -19,29 +19,8 @@ Octokit.middleware = stack
 get '/' do
   if session[:user]
     @client = set_client
-    
-    # orgs_th = Thread.new { @client.orgs }
-    # repos_th = Thread.new {
-    #   orgs_th.value.flat_map { |org|
-    #     Thread.new {
-    #       @client.org_repositories(org.login)
-    #     }
-    #   }
-    # }
-    # orgs_pulls_th = Thread.new {
-    #   repos_th.value.flat_map { |repo_th|
-    #     Thread.new {
-    #       repo_th.value.flat_map { |repo|
-    #         @client.pulls("#{repo[:owner][:login]}/#{repo[:name]}")
-    #       }
-    #     }
-    #   }
-    # }
-    # @orgs_pulls = orgs_pulls_th.value.flat_map(&:value)
-
-    # this returns a different structure from above, but it is a lot faster
-    @orgs_pulls = @client.search_issues("involves:#{@client.user.login} is:pr is:open").items
-    
+    query = "involves:#{@client.user.login} is:pr is:open"
+    @orgs_pulls = @client.search_issues(query).items
     @orgs_pulls.each { |org_pull|
       regex = /.+repos\/(?<org>.+)\/(?<repo>.+)\/pulls\/(?<number>\d+)/
       captures = org_pull.pull_request.url.match(regex)
@@ -63,7 +42,6 @@ get '/' do
       end
      }
      @orgs_pulls = @orgs_pulls.group_by { |op| op[:org] }
-     # @orgs_pulls = @orgs_pulls.group_by { |op| op.base.repo.owner.login }
 
      erb :'pulls'
    else

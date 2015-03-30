@@ -50,8 +50,8 @@
                 </a>
               </td>
               <td>
-                <a href="<%= pull[:head][:repo][:html_url] %>">
-                  <%= pull[:head][:repo][:full_name] %>
+                <a href="<%= "https://github.com/#{pull[:org]}/#{pull[:repo]}" %>">
+                  <%= "#{pull[:org]}/#{pull[:repo]}" %>
                 </a>
               </td>
               <td>
