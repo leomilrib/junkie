@@ -26,6 +26,7 @@ get '/' do
         client.search_issues("user:#{org.login} is:pr is:open -author:#{user_login}").items
       }
     }
+    # involves:login -user:orgs ?
     issues << Thread.new {
       client.search_issues("author:#{user_login} is:pr is:open").items
     }
