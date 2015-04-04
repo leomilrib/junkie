@@ -54,3 +54,12 @@ span.icon.alpha.review {
 span.icon.alpha.comment {
   background-image: url('/images/comments-alpha.png')
 }
+
+span.logo {
+  background-image: url('/images/junkie_logo_lines.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  float: left;
+  height: 85px;
+  width: 85px;
+}

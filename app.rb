@@ -18,30 +18,39 @@ Octokit.middleware = stack
 
 get '/' do
   if session[:user]
-    @client = set_client
-    query = "involves:#{@client.user.login} is:pr is:open"
-    @orgs_pulls = @client.search_issues(query).items
-    @orgs_pulls.each { |org_pull|
-      regex = /.+repos\/(?<org>.+)\/(?<repo>.+)\/pulls\/(?<number>\d+)/
-      captures = org_pull.pull_request.url.match(regex)
-      org_pull[:org] = captures[:org]
-      org_pull[:repo] = captures[:repo]
-      org_pull[:number] = captures[:number]
-      org_pull[:issue_comments] = begin
-         @client.issue_comments("#{org_pull[:org]}/#{org_pull[:repo]}",
-          "#{org_pull[:number]}")
-      rescue
-         []
-      end
-
-      org_pull[:pull_comments] = begin
-        @client.pull_comments("#{org_pull[:org]}/#{org_pull[:repo]}",
-          "#{org_pull[:number]}")
-      rescue
-        []
-      end
+    client = set_client
+    # user_login = client.user.login
+    user_login = session[:user]
+    issues = client.orgs.map { |org|
+      Thread.new {
+        client.search_issues("user:#{org.login} is:pr is:open -author:#{user_login}").items
+      }
+    }
+    issues << Thread.new {
+      client.search_issues("author:#{user_login} is:pr is:open").items
+    }
+    url_regex = /.+repos\/(?<org>.+)\/(?<repo>.+)\/pulls\/(?<number>\d+)/
+    @pulls = issues.flat_map { |issue|
+      issue.value.each { |pull|
+        captures = pull.pull_request.url.match(url_regex)
+        pull[:org] = captures[:org]
+        pull[:repo] = captures[:repo]
+        pull[:number] = captures[:number]
+        pull[:issue_comments] = begin
+           client.issue_comments("#{pull[:org]}/#{pull[:repo]}",
+            "#{pull[:number]}")
+        rescue
+           []
+        end
+        pull[:pull_comments] = begin
+          client.pull_comments("#{pull[:org]}/#{pull[:repo]}",
+            "#{pull[:number]}")
+        rescue
+          []
+        end
+      }
      }
-     @orgs_pulls = @orgs_pulls.group_by { |op| op[:org] }
+     @pulls = @pulls.sort_by { |p| p[:org] } .group_by { |p| p[:org] }
 
      erb :'pulls'
    else
@@ -67,9 +76,7 @@ get '/auth' do
 end
 
 get '/auth.callback' do
-  unless params[:code].to_s.empty? &&
-    (params[:state].to_s.empty? || session[:state] != params[:state])
-
+  unless params[:code].to_s.empty? && (params[:state].to_s.empty? || session[:state] != params[:state])
     query = {
       :body => {
         :client_id => ENV["GITHUB_APP_ID"],
@@ -85,6 +92,6 @@ get '/auth.callback' do
         session[:token] = JSON.parse(result.body)["access_token"]
         client = set_client
       end
-    end
-    redirect '/'
   end
+  redirect '/'
+end

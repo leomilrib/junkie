@@ -1,4 +1,4 @@
 rker_processes 3
-timeout 30
+timeout 45
 preload_app true
 

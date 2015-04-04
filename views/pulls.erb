@@ -5,13 +5,14 @@
     </p>
   </div>
   <div class="two-thirds column">
-    <h2><%= "Open Pull Requests" %></h2>
+    <span class="logo"></span>
+    <h1>Junkie</h1>
   </div>
 </div>
 
 <div class="row">
   <div class="twelve columns">
-    <% @orgs_pulls.each do |org, pulls| %>
+    <% @pulls.each do |org, pulls| %>
       <h3><%= "#{org}" %></h3>
       <table class="u-full-width">
         <thead>
