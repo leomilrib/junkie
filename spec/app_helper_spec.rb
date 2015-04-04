@@ -140,15 +140,11 @@ describe 'app_helper' do
       ]
     )
   }
-
-  before {
-    Octokit::Client.any_instance.stub(:user).and_return({
-      login: "user",
-      id: 666667,
-      type: "User"
-    })
-
-    @client = Octokit::Client.new
+  let(:session) {
+    session = {
+      user: "user",
+      user_id: 666667
+    }
   }
 
   it 'returns true if pull can be merged' do

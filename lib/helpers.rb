@@ -60,9 +60,8 @@ module Helpers
 
   def reviewed_it?(issue_comments)
     ships_regex = /(:\+1:)|(:shipit:)/
-
     ready = issue_comments.select { |ic|
-      (ic[:user][:id] == @client.user[:id]) && ships_regex.match(ic[:body])
+      (ic[:user][:id] == session[:user_id]) && ships_regex.match(ic[:body])
     }
 
     ready.size > 0 ? true : false
