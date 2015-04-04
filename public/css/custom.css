@@ -63,3 +63,7 @@ span.logo {
   height: 85px;
   width: 85px;
 }
+
+h1.logo {
+  line-height: inherit;
+}
