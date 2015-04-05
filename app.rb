@@ -54,7 +54,7 @@ get '/' do
      @pulls = @pulls.sort_by { |p| p[:org] } .group_by { |p| p[:org] }
 
      erb :'pulls'
-   else
+  else
     erb :'login'
   end
 end
@@ -95,4 +95,8 @@ get '/auth.callback' do
       end
   end
   redirect '/'
+end
+
+get '/about' do
+  erb :'about'
 end

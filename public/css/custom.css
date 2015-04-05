@@ -67,3 +67,7 @@ span.logo {
 h1.logo {
   line-height: inherit;
 }
+
+div.columns.logos {
+  text-align: center;
+}
