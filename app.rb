@@ -21,13 +21,15 @@ get '/' do
     client = set_client
     # user_login = client.user.login
     user_login = session[:user]
-    issues = client.orgs.map { |org|
+    orgs = client.orgs
+    issues = orgs.map { |org|
       Thread.new {
         client.search_issues("user:#{org.login} is:pr is:open -author:#{user_login}").items
       }
     }
     issues << Thread.new {
-      client.search_issues("author:#{user_login} is:pr is:open").items
+      # exlude = orgs.map { |org| "-user:#{org.login}" }.join(' ')
+      client.search_issues("involves:#{user_login} is:pr is:open").items
     }
     url_regex = /.+repos\/(?<org>.+)\/(?<repo>.+)\/pulls\/(?<number>\d+)/
     @pulls = issues.flat_map { |issue|
@@ -49,11 +51,17 @@ get '/' do
           []
         end
       }
-     }
-     @pulls = @pulls.sort_by { |p| p[:org] } .group_by { |p| p[:org] }
+    }
+    @pulls = @pulls.uniq { |p|
+      p[:html_url]
+    }.sort_by { |p|
+      p[:org]
+    }.group_by { |p|
+      p[:org]
+    }
 
      erb :'pulls'
-   else
+  else
     erb :'login'
   end
 end
@@ -94,4 +102,8 @@ get '/auth.callback' do
       end
   end
   redirect '/'
+end
+
+get '/about' do
+  erb :'about'
 end

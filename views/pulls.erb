@@ -5,13 +5,16 @@
     </p>
   </div>
   <div class="two-thirds column">
-    <span class="logo"></span>
+    <a href="/">
+      <span class="logo"></span>
+    </a>
     <h1 class="logo">Junkie</h1>
   </div>
 </div>
 
 <div class="row">
   <div class="twelve columns">
+    <% unless @pulls.empty? %>
     <% @pulls.each do |org, pulls| %>
       <h3><%= "#{org}" %></h3>
       <table class="u-full-width">
@@ -19,17 +22,15 @@
           <tr>
             <th>
               <div class="icon-container">
-                <span class="icon merge" title="merge?"></span>
-                <span class="icon review" title="review?"></span>
-                <span class="icon comment" title="comments?"></span>
+                <span class="icon merge">Merge</span>
+                <span class="icon review">Review</span>
+                <span class="icon comment">Comment</span>
               </div>
             </th>
-            <th>
-              <span>Name</span>
-            </th>
-            <th>Repo</th>
-            <th>Author</th>
-            <th>Last Update</th>
+            <th><span>Name</span></th>
+            <th><span>Repo</span></th>
+            <th><span>Author</span></th>
+            <th><span>Last Update</span></th>
           </tr>
         </thead>
         <tbody>
@@ -37,12 +38,9 @@
             <tr>
               <td>
                 <div class="icon-container">
-                  <span class="icon alpha <%= icon_merge(pull) %>" title="merge?">
-                  </span>
-                  <span class="icon alpha <%= icon_review(pull) %>" title="review?">
-                  </span>
-                  <span class="icon alpha <%= icon_comment(pull) %>" title="comments?">
-                  </span>
+                  <span class="icon alpha <%= icon_merge(pull) %>">Merge</span>
+                  <span class="icon alpha <%= icon_review(pull) %>">Review</span>
+                  <span class="icon alpha <%= icon_comment(pull) %>">Comment</span>
                 </div>
               </td>
               <td>
@@ -66,5 +64,41 @@
         </tbody>
       </table>
     <% end %>
+    <% else %>
+    <table class="u-full-width">
+        <thead>
+          <tr>
+            <th>
+              <div class="icon-container">
+                <span class="icon merge">Merge</span>
+                <span class="icon review">Review</span>
+                <span class="icon comment">Comment</span>
+              </div>
+            </th>
+            <th><span>Name</span></th>
+            <th><span>Repo</span></th>
+            <th><span>Author</span></th>
+            <th><span>Last Update</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td colspan="5">
+              <div class="center">
+                <p>Nothing to show for now...</p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    <% end %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="twelve colunm center">
+    <footer>
+      <a href="/about">about this app</a>
+    </footer>
   </div>
 </div>
