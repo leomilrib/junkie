@@ -5,7 +5,9 @@
     </p>
   </div>
   <div class="two-thirds column">
-    <span class="logo"></span>
+    <a href="/">
+      <span class="logo"></span>
+    </a>
     <h1 class="logo">Junkie</h1>
   </div>
 </div>
@@ -19,9 +21,9 @@
           <tr>
             <th>
               <div class="icon-container">
-                <span class="icon merge" title="merge?"></span>
-                <span class="icon review" title="review?"></span>
-                <span class="icon comment" title="comments?"></span>
+                <span class="icon merge" title="merge?">Merge</span>
+                <span class="icon review" title="review?">Review</span>
+                <span class="icon comment" title="comments?">Comment</span>
               </div>
             </th>
             <th>
@@ -37,12 +39,9 @@
             <tr>
               <td>
                 <div class="icon-container">
-                  <span class="icon alpha <%= icon_merge(pull) %>" title="merge?">
-                  </span>
-                  <span class="icon alpha <%= icon_review(pull) %>" title="review?">
-                  </span>
-                  <span class="icon alpha <%= icon_comment(pull) %>" title="comments?">
-                  </span>
+                  <span class="icon alpha <%= icon_merge(pull) %>" title="merge?">Merge</span>
+                  <span class="icon alpha <%= icon_review(pull) %>" title="review?">Review</span>
+                  <span class="icon alpha <%= icon_comment(pull) %>" title="comments?">Comment</span>
                 </div>
               </td>
               <td>

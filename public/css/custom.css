@@ -4,23 +4,19 @@ img.button-github {
 }
 
 div.icon-container{
-  width: 84px;
-  /*
-    you may ask:
-      "but why 84?"
-    and i would tell you my dear friend:
-      because 42 * 2 = 84 :wink:
-  */
+  width: 100px;
 }
 
 span.icon {
   background-repeat: no-repeat;
   background-size: contain;
-  float: left;
   display: inline-block;
   height: 20px;
   width: 20px;
   margin: 3px;
+  /*font: 0/0 a;*/
+  text-shadow: none;
+  color: transparent;
 }
 
 span.icon.ready {
@@ -68,6 +64,20 @@ h1.logo {
   line-height: inherit;
 }
 
-div.columns.logos {
+div.center {
   text-align: center;
+  margin: 0 auto;
+  width: 100px;
+}
+
+div.justify p {
+  text-align: justify;
+}
+
+strong.pending {
+  color: #bd2c00;
+}
+
+strong.ready {
+  color: #6cc644;
 }
