@@ -14,6 +14,7 @@
 
 <div class="row">
   <div class="twelve columns">
+    <% unless @pulls.empty? %>
     <% @pulls.each do |org, pulls| %>
       <h3><%= "#{org}" %></h3>
       <table class="u-full-width">
@@ -26,12 +27,10 @@
                 <span class="icon comment">Comment</span>
               </div>
             </th>
-            <th>
-              <span>Name</span>
-            </th>
-            <th>Repo</th>
-            <th>Author</th>
-            <th>Last Update</th>
+            <th><span>Name</span></th>
+            <th><span>Repo</span></th>
+            <th><span>Author</span></th>
+            <th><span>Last Update</span></th>
           </tr>
         </thead>
         <tbody>
@@ -65,9 +64,41 @@
         </tbody>
       </table>
     <% end %>
+    <% else %>
+    <table class="u-full-width">
+        <thead>
+          <tr>
+            <th>
+              <div class="icon-container">
+                <span class="icon merge">Merge</span>
+                <span class="icon review">Review</span>
+                <span class="icon comment">Comment</span>
+              </div>
+            </th>
+            <th><span>Name</span></th>
+            <th><span>Repo</span></th>
+            <th><span>Author</span></th>
+            <th><span>Last Update</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td colspan="5">
+              <div class="center">
+                <p>Nothing to show for now...</p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    <% end %>
   </div>
 </div>
 
-<footer>
-  <a href="/about">about this app</a>
-</footer>
+<div class="row">
+  <div class="twelve colunm center">
+    <footer>
+      <a href="/about">about this app</a>
+    </footer>
+  </div>
+</div>
