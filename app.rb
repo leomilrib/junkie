@@ -21,10 +21,11 @@ get '/' do
     client = set_client
     # user_login = client.user.login
     user_login = session[:user]
-    orgs = client.orgs
+    orgs = client.orgs << { login: user_login }
     issues = orgs.map { |org|
       Thread.new {
-        client.search_issues("user:#{org.login} is:pr is:open -author:#{user_login}").items
+        # -author:#{user_login} ?
+        client.search_issues("user:#{org[:login]} is:pr is:open -author:#{user_login}").items
       }
     }
     issues << Thread.new {
