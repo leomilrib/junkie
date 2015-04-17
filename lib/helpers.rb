@@ -55,7 +55,7 @@ module Helpers
       ships_regex.match ic[:body]
     }
 
-    approves.size > 1 ? true : false
+    (approves.size > 1)
   end
 
   def reviewed_it?(issue_comments)
@@ -64,11 +64,14 @@ module Helpers
       (ic[:user][:id] == session[:user_id]) && ships_regex.match(ic[:body])
     }
 
-    ready.size > 0 ? true : false
+    (ready.size > 0)
   end
 
   def comments?(pull_comments)
     pull_comments.size > 0 ? true : false
+    commented = pull_comments.select { |pc| pc[:user][:id] == session[:user_id] }
+
+    (commented.size > 0)
   end
 
   def icon_merge(pull)

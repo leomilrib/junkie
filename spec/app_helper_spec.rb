@@ -4,20 +4,20 @@ describe 'app_helper' do
       issue_comments: [
         {
           html_url:'https://github.com/org/repo/pull/666#issuecomment-666666',
-          id:666666,
+          id: 666666,
           user:{
             login:'user',
-            id:666667,
+            id: 666667,
             type:'User'
           },
          body:':+1: '
         },
         {
           html_url:'https://github.com/org/repo/pull/666#issuecomment-666666',
-          id:666666,
+          id: 666666,
           user:{
             login:'another_user',
-            id:666668,
+            id: 666668,
             type:'User',
           },
           body:'lot of text and :shipit: :smiley:'
@@ -26,12 +26,12 @@ describe 'app_helper' do
       pull_comments: [
         {
           url:'https://api.github.com/repos/org/repo/pulls/comments/666666',
-          id:666666,
+          id: 666666,
           diff_hunk:'<<code>>',
           position:1,
             user:{
             login:'user',
-            id:666666,
+            id: 666666,
             type:'User'
           },
           body:'yay! comments!',
@@ -40,12 +40,12 @@ describe 'app_helper' do
         },
         {
           url:'https://api.github.com/repos/org/repo/pulls/comments/666666',
-          id:666667,
+          id: 666667,
           diff_hunk:'<<code>>',
           position:1,
           user:{
-            login:'another_user',
-            id:666667,
+            login: session[:user],
+            id: session[:user_id],
             type:'User'
           },
           body:':grin:',
@@ -54,12 +54,12 @@ describe 'app_helper' do
         },
         {
           url:'https://api.github.com/repos/org/repo/pulls/comments/666666',
-          id:666668,
+          id: 666668,
           diff_hunk:'<<code>>',
           position:1,
             user:{
             login:'and_another',
-            id:666668,
+            id: 666668,
             type:'User'
           },
           body:'and more comments!',
@@ -75,20 +75,20 @@ describe 'app_helper' do
       issue_comments: [
         {
           html_url:'https://github.com/org/repo/pull/666#issuecomment-666666',
-          id:666666,
+          id: 666666,
           user:{
             login:'user',
-            id:666667,
+            id: 666667,
             type:'User'
           },
          body:"you can't merge it yet :sad:"
         },
         {
           html_url:'https://github.com/org/repo/pull/666#issuecomment-666666',
-          id:666666,
+          id: 666666,
           user:{
             login:'another_user',
-            id:666668,
+            id: 666668,
             type:'User',
           },
           body:'lot of text and :shipit: :smiley:'
@@ -97,12 +97,12 @@ describe 'app_helper' do
       pull_comments: [
         {
           url:'https://api.github.com/repos/org/repo/pulls/comments/666666',
-          id:666666,
+          id: 666666,
           diff_hunk:'<<code>>',
           position:1,
             user:{
             login:'user',
-            id:666666,
+            id: 666666,
             type:'User'
           },
           body:'yay! comments!',
@@ -111,12 +111,12 @@ describe 'app_helper' do
         },
         {
           url:'https://api.github.com/repos/org/repo/pulls/comments/666666',
-          id:666667,
+          id: 666667,
           diff_hunk:'<<code>>',
           position:1,
           user:{
             login:'another_user',
-            id:666667,
+            id: 666668,
             type:'User'
           },
           body:':grin:',
@@ -125,12 +125,12 @@ describe 'app_helper' do
         },
         {
           url:'https://api.github.com/repos/org/repo/pulls/comments/666666',
-          id:666668,
+          id: 666668,
           diff_hunk:'<<code>>',
           position:1,
             user:{
             login:'and_another',
-            id:666668,
+            id: 666669,
             type:'User'
           },
           body:'and more comments!',
@@ -140,6 +140,7 @@ describe 'app_helper' do
       ]
     )
   }
+
   let(:session) {
     session = {
       user: "user",
@@ -170,4 +171,18 @@ describe 'app_helper' do
 
     expect(result).to be_truthy
   end
+
+  it "returns true if you commented it" do
+    result = comments?(octo_client_ready.pull_comments('org/repo',666))
+
+    expect(result).to be_truthy
+  end
+
+  it "returns false if you commented it" do
+    result = comments?(octo_client_not_ready.pull_comments('org/repo',666))
+
+    expect(result).to be_falsey
+  end
+
+
 end
