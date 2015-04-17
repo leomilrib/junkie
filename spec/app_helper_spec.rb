@@ -178,7 +178,7 @@ describe 'app_helper' do
     expect(result).to be_truthy
   end
 
-  it "returns false if you commented it" do
+  it "returns false if you didn't commented it" do
     result = comments?(octo_client_not_ready.pull_comments('org/repo',666))
 
     expect(result).to be_falsey
