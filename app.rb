@@ -25,7 +25,9 @@ get '/' do
     issues = orgs.map { |org|
       Thread.new {
         # -author:#{user_login} ?
-        client.search_issues("user:#{org[:login]} is:pr is:open -author:#{user_login}").items
+        client.search_issues(
+          "user:#{org[:login]} is:pr is:open -author:#{user_login}"
+        ).items
       }
     }
     issues << Thread.new {
@@ -40,14 +42,24 @@ get '/' do
         pull[:repo] = captures[:repo]
         pull[:number] = captures[:number]
         pull[:issue_comments] = begin
-           client.issue_comments("#{pull[:org]}/#{pull[:repo]}",
-            "#{pull[:number]}")
+           client.issue_comments(
+            "#{pull[:org]}/#{pull[:repo]}",
+            "#{pull[:number]}"
+          )
         rescue
            []
         end
         pull[:pull_comments] = begin
-          client.pull_comments("#{pull[:org]}/#{pull[:repo]}",
-            "#{pull[:number]}")
+          pushed_at = client.pull_request(
+            "#{pull[:org]}/#{pull[:repo]}",
+            pull[:number]
+          )[:head][:repo][:pushed_at]
+puts "#{pushed_at}, #{pull[:org]}/#{pull[:repo]}/#{pull[:number]}"
+          client.pull_comments(
+            "#{pull[:org]}/#{pull[:repo]}",
+            "#{pull[:number]}",
+            since: pushed_at
+          )
         rescue
           []
         end
@@ -96,7 +108,10 @@ get '/auth.callback' do
           "Accept" => "application/json"
         }
       }
-      result = HTTParty.post("https://github.com/login/oauth/access_token", query)
+      result = HTTParty.post(
+        "https://github.com/login/oauth/access_token",
+        query
+      )
       if result.code == 200
         session[:token] = JSON.parse(result.body)["access_token"]
         client = set_client
