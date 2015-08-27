@@ -34,11 +34,16 @@
           </tr>
         </thead>
         <tbody>
-          <% pulls.each do |pull| %>
+          <% pulls.each_with_index do |pull, i| %>
+          <% delay = i * 0.5 %>
             <tr>
               <td>
                 <div class="icon-container">
-                  <span class="icon alpha loading" title="Loading...">Loading...</span> 
+                  <span
+                    class="icon alpha loading"
+                    style="animation-delay: <%= delay %>s; -webkit-animation-delay: <%= delay %>s"
+                    title="Loading..."
+                  >Loading...</span>
                   <!-- <span class="icon alpha <%#= icon_merge(pull) %>">Merge</span> -->
                   <!-- <span class="icon alpha <%#= icon_review(pull) %>">Review</span> -->
                   <!-- <span class="icon alpha <%#= icon_comment(pull) %>">Comment</span> -->
