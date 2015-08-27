@@ -22,52 +22,27 @@ get '/' do
     # user_login = client.user.login
     user_login = session[:user]
     orgs = client.orgs << { login: user_login }
-    issues = orgs.map { |org|
-      Thread.new {
-        # -author:#{user_login} ?
-        client.search_issues(
-          "user:#{org[:login]} is:pr is:open -author:#{user_login}"
-        ).items
-      }
-    }
+    users_orgs = orgs.map { |o| "user:#{o[:login]}"}.join(' ')
+    query = "#{users_orgs} is:pr is:open -involves:#{user_login}"
+puts users_orgs    
+puts query    
+
+    issues = [Thread.new { client.search_issues(query).items }]
     issues << Thread.new {
-      # exlude = orgs.map { |org| "-user:#{org.login}" }.join(' ')
       client.search_issues("involves:#{user_login} is:pr is:open").items
     }
+    
     url_regex = /.+repos\/(?<org>.+)\/(?<repo>.+)\/pulls\/(?<number>\d+)/
+#require 'pry';binding.pry    
     @pulls = issues.flat_map { |issue|
       issue.value.each { |pull|
         captures = pull.pull_request.url.match(url_regex)
         pull[:org] = captures[:org]
         pull[:repo] = captures[:repo]
         pull[:number] = captures[:number]
-        pull[:issue_comments] = begin
-           client.issue_comments(
-            "#{pull[:org]}/#{pull[:repo]}",
-            "#{pull[:number]}"
-          )
-        rescue
-           []
-        end
-        pull[:pull_comments] = begin
-          pushed_at = client.pull_request(
-            "#{pull[:org]}/#{pull[:repo]}",
-            pull[:number]
-          )[:head][:repo][:pushed_at]
-puts "#{pushed_at}, #{pull[:org]}/#{pull[:repo]}/#{pull[:number]}"
-          client.pull_comments(
-            "#{pull[:org]}/#{pull[:repo]}",
-            "#{pull[:number]}",
-            since: pushed_at
-          )
-        rescue
-          []
-        end
       }
     }
-    @pulls = @pulls.uniq { |p|
-      p[:html_url]
-    }.sort_by { |p|
+    @pulls = @pulls.sort_by { |p|
       p[:org]
     }.group_by { |p|
       p[:org]
