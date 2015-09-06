@@ -19,7 +19,7 @@ $(function() {
         number: span.data('number')
       },
     }).done(function(result) {
-      console.dir(result)
+      span.parents('div.icon-container').html(result)
     })
   })
 })
