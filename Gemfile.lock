@@ -18,7 +18,6 @@ GEM
       json (~> 1.8)
       multi_xml (>= 0.5.2)
     json (1.8.1)
-    kgio (2.9.3)
     method_source (0.8.2)
     mime-types (2.4.3)
     mini_portile (0.6.1)
@@ -33,12 +32,12 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
+    puma (2.13.4)
     rack (1.5.2)
     rack-protection (1.5.3)
       rack
     rack-test (0.6.2)
       rack (>= 1.0)
-    raindrops (0.13.0)
     rspec (3.1.0)
       rspec-core (~> 3.1.0)
       rspec-expectations (~> 3.1.0)
@@ -64,10 +63,6 @@ GEM
       sinatra (>= 1.0.0)
     slop (3.6.0)
     tilt (1.4.1)
-    unicorn (4.8.3)
-      kgio (~> 2.6)
-      rack
-      raindrops (~> 0.7)
     xpath (2.0.0)
       nokogiri (~> 1.3)
 
@@ -82,8 +77,8 @@ DEPENDENCIES
   netrc
   octokit
   pry
+  puma
   rspec
   sinatra
   sinatra-flash
   sinatra-redirect-with-flash
-  unicorn
