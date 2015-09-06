@@ -43,10 +43,10 @@
                     class="icon alpha loading"
                     style="animation-delay: <%= delay %>s; -webkit-animation-delay: <%= delay %>s"
                     title="Loading..."
+                    data-org="<%= pull[:org] %>"
+                    data-repo="<%= pull[:repo] %>"
+                    data-number="<%= pull[:number] %>"
                   >Loading...</span>
-                  <!-- <span class="icon alpha <%#= icon_merge(pull) %>">Merge</span> -->
-                  <!-- <span class="icon alpha <%#= icon_review(pull) %>">Review</span> -->
-                  <!-- <span class="icon alpha <%#= icon_comment(pull) %>">Comment</span> -->
                 </div>
               </td>
               <td>

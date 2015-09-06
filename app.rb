@@ -72,7 +72,7 @@ get '/auth' do
 end
 
 get '/auth.callback' do
-  unless params[:code].to_s.empty? && (params[:state].to_s.empty? || session[:state] != params[:state])
+  unless(params[:code].to_s.empty? && (params[:state].to_s.empty? || session[:state] != params[:state]))
     query = {
       :body => {
         :client_id => ENV["GITHUB_APP_ID"],
@@ -97,4 +97,8 @@ end
 
 get '/about' do
   erb :'about'
+end
+
+get '/pull_icons' do
+  erb :'_pull_icons', layout: false
 end

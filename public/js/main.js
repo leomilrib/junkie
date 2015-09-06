@@ -6,4 +6,20 @@ $(function() {
   $('span.icon.pending').each(function(){
     $(this).prop('title', 'This is pending')
   })
+
+  $('span.loading').each(function(){
+    var span = $(this)
+
+    $.ajax({
+      url: '/pull_icons',
+      type: 'GET',
+      data: {
+        org: span.data('org'),
+        repo: span.data('repo'),
+        number: span.data('number')
+      },
+    }).done(function(result) {
+      console.dir(result)
+    })
+  })
 })
