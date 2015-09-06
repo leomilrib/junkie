@@ -22,14 +22,10 @@ get '/' do
     # user_login = client.user.login
     user_login = session[:user]
     orgs = client.orgs << { login: user_login }
-    issues = orgs.map { |org|
-      Thread.new {
-        # -author:#{user_login} ?
-        client.search_issues("user:#{org[:login]} is:pr is:open -author:#{user_login}").items
-      }
-    }
+    users_orgs = orgs.map { |o| "user:#{o[:login]}"}.join(' ')
+    query = "#{users_orgs} is:pr is:open -involves:#{user_login}"
+    issues = [Thread.new { client.search_issues(query).items }]
     issues << Thread.new {
-      # exlude = orgs.map { |org| "-user:#{org.login}" }.join(' ')
       client.search_issues("involves:#{user_login} is:pr is:open").items
     }
     url_regex = /.+repos\/(?<org>.+)\/(?<repo>.+)\/pulls\/(?<number>\d+)/
@@ -39,23 +35,9 @@ get '/' do
         pull[:org] = captures[:org]
         pull[:repo] = captures[:repo]
         pull[:number] = captures[:number]
-        pull[:issue_comments] = begin
-           client.issue_comments("#{pull[:org]}/#{pull[:repo]}",
-            "#{pull[:number]}")
-        rescue
-           []
-        end
-        pull[:pull_comments] = begin
-          client.pull_comments("#{pull[:org]}/#{pull[:repo]}",
-            "#{pull[:number]}")
-        rescue
-          []
-        end
       }
     }
-    @pulls = @pulls.uniq { |p|
-      p[:html_url]
-    }.sort_by { |p|
+    @pulls = @pulls.sort_by { |p|
       p[:org]
     }.group_by { |p|
       p[:org]
@@ -85,7 +67,7 @@ get '/auth' do
 end
 
 get '/auth.callback' do
-  unless params[:code].to_s.empty? && (params[:state].to_s.empty? || session[:state] != params[:state])
+  unless(params[:code].to_s.empty? && (params[:state].to_s.empty? || session[:state] != params[:state]))
     query = {
       :body => {
         :client_id => ENV["GITHUB_APP_ID"],
@@ -96,7 +78,10 @@ get '/auth.callback' do
           "Accept" => "application/json"
         }
       }
-      result = HTTParty.post("https://github.com/login/oauth/access_token", query)
+      result = HTTParty.post(
+        "https://github.com/login/oauth/access_token",
+        query
+      )
       if result.code == 200
         session[:token] = JSON.parse(result.body)["access_token"]
         client = set_client
@@ -107,4 +92,27 @@ end
 
 get '/about' do
   erb :'about'
+end
+
+get '/pull_icons' do
+  pull = {}
+  client = set_client
+  pull[:issue_comments] = begin
+     client.issue_comments(
+      "#{params[:org]}/#{params[:repo]}",
+      "#{params[:number]}"
+    )
+  rescue
+     []
+  end
+  pull[:pull_comments] = begin
+    client.pull_comments(
+      "#{params[:org]}/#{params[:repo]}",
+      "#{params[:number]}"
+    )
+  rescue
+    []
+  end
+
+  erb :'_pull_icons', layout: false, locals: { pull: pull }
 end
