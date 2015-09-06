@@ -1,12 +1,4 @@
 $(function() {
-  $('span.icon.ready').each(function(){
-    $(this).prop('title', 'This is ready')
-  })
-
-  $('span.icon.pending').each(function(){
-    $(this).prop('title', 'This is pending')
-  })
-
   $('span.loading').each(function(){
     var span = $(this)
 
@@ -20,6 +12,16 @@ $(function() {
       },
     }).done(function(result) {
       span.parents('div.icon-container').html(result)
+      defineIconTitles()
     })
   })
+
+  var defineIconTitles = function(){
+    $('span.icon.ready').each(function(){
+      $(this).prop('title', 'This is ready')
+    })
+    $('span.icon.pending').each(function(){
+      $(this).prop('title', 'This is pending')
+    })
+  }
 })
