@@ -32,10 +32,10 @@ span.icon.loading {
   width: 40px;
   height: 40px;
   position: relative;
-  -webkit-animation: silly_walking 10s infinite; /* Chrome, Safari, Opera */
+  -webkit-animation: silly_walking 23s infinite; /* Chrome, Safari, Opera */
   -webkit-animation-timing-function: linear; /* Chrome, Safari, Opera */
   -webkit-animation-direction: alternate; /* Chrome, Safari, Opera */
-  animation: silly_walking 10s infinite;
+  animation: silly_walking 23s infinite;
   animation-timing-function: linear;
   animation-direction: alternate;
 }
