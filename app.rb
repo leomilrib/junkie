@@ -15,6 +15,7 @@ stack = Faraday::RackBuilder.new do |builder|
   builder.adapter Faraday.default_adapter
 end
 Octokit.middleware = stack
+Octokit.auto_paginate = true
 
 get '/' do
   if session[:user]
