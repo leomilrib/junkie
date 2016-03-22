@@ -8,7 +8,8 @@ $(function() {
       data: {
         org: span.data('org'),
         repo: span.data('repo'),
-        number: span.data('number')
+        number: span.data('number'),
+        updated_at: span.data('updated-at')
       },
     }).done(function(result) {
       span.parents('div.icon-container').html(result)
