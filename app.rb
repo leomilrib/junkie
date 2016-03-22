@@ -74,19 +74,19 @@ get '/auth.callback' do
         :client_id => ENV["GITHUB_APP_ID"],
         :client_secret => ENV["GITHUB_APP_SECRET"],
         :code => params[:code]
-        },
-        :headers => {
-          "Accept" => "application/json"
-        }
+      },
+      :headers => {
+        "Accept" => "application/json"
       }
-      result = HTTParty.post(
-        "https://github.com/login/oauth/access_token",
-        query
-      )
-      if result.code == 200
-        session[:token] = JSON.parse(result.body)["access_token"]
-        client = set_client
-      end
+    }
+    result = HTTParty.post(
+      "https://github.com/login/oauth/access_token",
+      query
+    )
+    if result.code == 200
+      session[:token] = JSON.parse(result.body)["access_token"]
+      client = set_client
+    end
   end
   redirect '/'
 end
@@ -96,6 +96,7 @@ get '/about' do
 end
 
 get '/pull_icons' do
+  from_last_update = params[:updated_at]
   pull = {}
   client = set_client
   pull[:issue_comments] = begin
@@ -109,7 +110,8 @@ get '/pull_icons' do
   pull[:pull_comments] = begin
     client.pull_comments(
       "#{params[:org]}/#{params[:repo]}",
-      "#{params[:number]}"
+      "#{params[:number]}",
+      options: { since: from_last_update }
     )
   rescue
     []
