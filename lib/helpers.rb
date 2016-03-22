@@ -1,4 +1,7 @@
 module Helpers
+
+  SHIPS_REGEX = /(:\+1:)|(:shipit:)|(:ship:\s*:it:)|(:sheep:\s*:it:)/
+
   def logout
     return unless session[:user]
     session[:user] = nil
@@ -9,8 +12,12 @@ module Helpers
     "#{env['rack.url_scheme']}://#{env['HTTP_HOST']}"
   end
 
+  def big_ass_random_string
+    ENV['SESSION_SATTE'] || "This is a big ass string yeah..."
+  end
+
   def create_session_state
-    Digest::MD5.hexdigest "#{Time.now.to_i}unguessable random string#{rand}"
+    Digest::MD5.hexdigest "#{Time.now.to_i}#{big_ass_random_string}#{rand}"
   end
 
   def github_oath_path(state)
@@ -19,7 +26,7 @@ module Helpers
       :redirect_uri => "#{app_root}/auth.callback",
       :state => state,
       :scope => 'repo'
-    }.map{|k,v|
+    }.map{ |k,v|
       "#{k}=#{URI.encode(v)}"
     }.join("&")
 
@@ -49,27 +56,25 @@ module Helpers
   end
 
   def can_merge_it?(issue_comments)
-    ships_regex = /(:\+1:)|(:shipit:)/
-
     approves = issue_comments.select { |ic|
-      ships_regex.match ic[:body]
+      SHIPS_REGEX.match ic[:body]
     }
 
     (approves.size > 1)
   end
 
   def reviewed_it?(issue_comments)
-    ships_regex = /(:\+1:)|(:shipit:)/
     ready = issue_comments.select { |ic|
-      (ic[:user][:id] == session[:user_id]) && ships_regex.match(ic[:body])
+      (ic[:user][:id] == session[:user_id]) && SHIPS_REGEX.match(ic[:body])
     }
 
     (ready.size > 0)
   end
 
-  def comments?(pull_comments)
-    pull_comments.size > 0 ? true : false
-    commented = pull_comments.select { |pc| pc[:user][:id] == session[:user_id] }
+  def comments?(pull)
+    commented = pull[:pull_comments].select { |pc|
+      pc[:user][:id] == session[:user_id]
+    }
 
     (commented.size > 0)
   end
@@ -83,6 +88,6 @@ module Helpers
   end
 
   def icon_comment(pull)
-    comments?(pull[:pull_comments]) ? 'comment ready' : 'comment pending'
+    comments?(pull) ? 'comment ready' : 'comment pending'
   end
 end
