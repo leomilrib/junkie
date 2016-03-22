@@ -71,8 +71,8 @@ module Helpers
     (ready.size > 0)
   end
 
-  def comments?(pull)
-    commented = pull[:pull_comments].select { |pc|
+  def comments?(pull_comments)
+    commented = pull_comments.select { |pc|
       pc[:user][:id] == session[:user_id]
     }
 
@@ -88,6 +88,6 @@ module Helpers
   end
 
   def icon_comment(pull)
-    comments?(pull) ? 'comment ready' : 'comment pending'
+    comments?(pull[:pull_comments]) ? 'comment ready' : 'comment pending'
   end
 end
