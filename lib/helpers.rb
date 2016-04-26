@@ -90,4 +90,14 @@ module Helpers
   def icon_comment(pull)
     comments?(pull[:pull_comments]) ? 'comment ready' : 'comment pending'
   end
+
+  def responsible_info(pull)
+    responsible = pull[:assignee] || pull[:user]
+
+    <<-HTML
+      <a href="#{responsible[:html_url]}">
+        #{responsible[:login]}
+      </a>
+    HTML
+  end
 end

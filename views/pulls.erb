@@ -29,7 +29,7 @@
             </th>
             <th><span>Name</span></th>
             <th><span>Repo</span></th>
-            <th><span>Author</span></th>
+            <th><span>Responsible (Assignee/Author)</span></th>
             <th><span>Last Update</span></th>
           </tr>
         </thead>
@@ -60,11 +60,7 @@
                   <%= "#{pull[:org]}/#{pull[:repo]}" %>
                 </a>
               </td>
-              <td>
-                <a href="<%= pull[:user][:html_url] %>">
-                  <%= pull[:user][:login] %>
-                </a>
-              </td>
+              <td><%= responsible_info(pull) %></td>
               <td><%= pull[:updated_at].strftime('%d %B %Y') %></td>
             </tr>
           <% end %>
@@ -84,7 +80,7 @@
             </th>
             <th><span>Name</span></th>
             <th><span>Repo</span></th>
-            <th><span>Author</span></th>
+            <th><span>Responsible (Assignee/Author)</span></th>
             <th><span>Last Update</span></th>
           </tr>
         </thead>
