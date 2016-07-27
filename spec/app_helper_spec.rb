@@ -21,8 +21,19 @@ describe 'app_helper' do
             type:'User',
           },
           body:'lot of text and :shipit: :smiley:'
+        },
+        {
+          html_url:'https://github.com/org/repo/pull/666#issuecomment-666666',
+          id: 666666,
+          user:{
+            login:'yet_another_user',
+            id: 666669,
+            type:'User'
+          },
+         body:'A lot of text and a :+1: for your code'
         }
       ],
+
       pull_comments: [
         {
           url:'https://api.github.com/repos/org/repo/pulls/comments/666666',
