@@ -60,7 +60,7 @@ module Helpers
       SHIPS_REGEX.match ic[:body]
     }
 
-    (approves.size > 1)
+    (approves.size >= 3)
   end
 
   def reviewed_it?(issue_comments)
