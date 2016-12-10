@@ -1,6 +1,7 @@
 module Helpers
-
-  SHIPS_REGEX = /(:\+1:)|(:shipit:)|(:ship:\s*:it:)|(:sheep:\s*:it:)/
+  APPROVED = 'approved'
+  CHANGES_REQUESTED = 'changes_requested'
+  EVENT_REVIEWD = 'reviewed'
 
   def logout
     return unless session[:user]
@@ -55,40 +56,38 @@ module Helpers
     client
   end
 
-  def can_merge_it?(issue_comments)
-    approves = issue_comments.select { |ic|
-      SHIPS_REGEX.match ic[:body]
+  def can_merge_it?(grouped_timeline)
+    grouped_timeline.count { |user_login, time_lines|
+      time_lines.any? { |time_line| time_line[:state] == APPROVED }
+    } > 4
+  end
+
+  def reviewed_it?(grouped_timeline)
+    user_timeline = grouped_timeline[session[:user]] || []
+
+    user_timeline.any? { |time_line|
+      time_line[:state] == APPROVED
     }
-
-    (approves.size > 1)
   end
 
-  def reviewed_it?(issue_comments)
-    ready = issue_comments.select { |ic|
-      (ic[:user][:id] == session[:user_id]) && SHIPS_REGEX.match(ic[:body])
+  def asked_for_changes?(grouped_timeline)
+    user_timeline = grouped_timeline[session[:user]] || []
+
+    user_timeline.any? { |time_line|
+      time_line[:state] == CHANGES_REQUESTED
     }
-
-    (ready.size > 0)
   end
 
-  def comments?(pull_comments)
-    commented = pull_comments.select { |pc|
-      pc[:user][:id] == session[:user_id]
-    }
-
-    (commented.size > 0)
+  def icon_merge(grouped_timeline)
+    can_merge_it?(grouped_timeline) ? 'merge ready' : 'merge pending'
   end
 
-  def icon_merge(pull)
-    can_merge_it?(pull[:issue_comments]) ? 'merge ready' : 'merge pending'
+  def icon_review(grouped_timeline)
+    reviewed_it?(grouped_timeline) ? 'review ready' : 'review pending'
   end
 
-  def icon_review(pull)
-    reviewed_it?(pull[:issue_comments]) ? 'review ready' : 'review pending'
-  end
-
-  def icon_comment(pull)
-    comments?(pull[:pull_comments]) ? 'comment ready' : 'comment pending'
+  def icon_comment(grouped_timeline)
+    asked_for_changes?(grouped_timeline) ? 'comment ready' : 'comment pending'
   end
 
   def responsible_info(pull)
