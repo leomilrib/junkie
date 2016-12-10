@@ -1,6 +1,7 @@
 module Helpers
   APPROVED = 'approved'
   CHANGES_REQUESTED = 'changes_requested'
+  EVENT_REVIEWD = 'reviewed'
 
   def logout
     return unless session[:user]
@@ -55,30 +56,38 @@ module Helpers
     client
   end
 
-  def can_merge_it?(grouped_time_line)
-    grouped_time_line.count { |user_login, time_lines|
+  def can_merge_it?(grouped_timeline)
+    grouped_timeline.count { |user_login, time_lines|
       time_lines.any? { |time_line| time_line[:state] == APPROVED }
     } > 4
   end
 
-  def reviewed_it?(user_time_line)
-    user_time_line.any? { |time_line| time_line[:state] == APPROVED }
+  def reviewed_it?(grouped_timeline)
+    user_timeline = grouped_timeline[session[:user]] || []
+
+    user_timeline.any? { |time_line|
+      time_line[:state] == APPROVED
+    }
   end
 
-  def asked_for_changes?(user_time_line)
-    user_time_line.any? { |time_line| time_line[:state] == CHANGES_REQUESTED }
+  def asked_for_changes?(grouped_timeline)
+    user_timeline = grouped_timeline[session[:user]] || []
+
+    user_timeline.any? { |time_line|
+      time_line[:state] == CHANGES_REQUESTED
+    }
   end
 
-  def icon_merge(grouped_time_line)
-    can_merge_it?(grouped_time_line) ? 'merge ready' : 'merge pending'
+  def icon_merge(grouped_timeline)
+    can_merge_it?(grouped_timeline) ? 'merge ready' : 'merge pending'
   end
 
-  def icon_review(grouped_time_line)
-    reviewed_it?(grouped_time_line[session[:user]]) ? 'review ready' : 'review pending'
+  def icon_review(grouped_timeline)
+    reviewed_it?(grouped_timeline) ? 'review ready' : 'review pending'
   end
 
-  def icon_comment(grouped_time_line)
-    asked_for_changes?(grouped_time_line[session[:user]]) ? 'comment ready' : 'comment pending'
+  def icon_comment(grouped_timeline)
+    asked_for_changes?(grouped_timeline) ? 'comment ready' : 'comment pending'
   end
 
   def responsible_info(pull)
