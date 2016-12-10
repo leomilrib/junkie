@@ -39,13 +39,13 @@ describe "app_helper" do
   describe '#asked_for_changes?' do
     it "returns true for logged user that asked for changes on issue" do
       expect(
-        asked_for_changes?(time_line_approved_grouped_by_login[session[:user]])
+        asked_for_changes?(issue_needs_changes_grouped_by_login[session[:user]])
       ).to eq(true)
     end
 
     it "returns false for logged user that didn't asked for changes on issue" do
       expect(
-        asked_for_changes?(issue_needs_changes_grouped_by_login[session[:user]])
+        asked_for_changes?(time_line_approved_grouped_by_login[session[:user]])
       ).to eq(false)
     end
   end

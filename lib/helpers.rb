@@ -62,19 +62,11 @@ module Helpers
   end
 
   def reviewed_it?(user_time_line)
-    ready = issue_comments.select { |ic|
-      (ic[:user][:id] == session[:user_id]) && SHIPS_REGEX.match(ic[:body])
-    }
-
-    (ready.size > 0)
+    user_time_line.any? { |time_line| time_line[:state] == APPROVED }
   end
 
   def asked_for_changes?(user_time_line)
-    commented = pull_comments.select { |pc|
-      pc[:user][:id] == session[:user_id]
-    }
-
-    (commented.size > 0)
+    user_time_line.any? { |time_line| time_line[:state] == CHANGES_REQUESTED }
   end
 
   def icon_merge(grouped_time_line)
