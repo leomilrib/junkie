@@ -1,39 +1,44 @@
 describe "app_helper" do
   include_context "octokit data"
 
-  it 'returns true if pull can be merged' do
-    result = can_merge_it?(octo_client_ready.issue_timeline('org/repo',666))
+  let!(:time_line_approved_grouped_by_login) {
+    client
+      .issue_timeline('organization/approved', 666)
+      .group_by { |point| point[:user][:login] }
+  }
+  let!(:issue_needs_changes_grouped_by_login) {
+    client
+      .issue_timeline('organization/not_approved', 666)
+      .group_by { |point| point[:user][:login] }
+  }
 
-    expect(result).to eq(true)
+  describe '#can_merge_it?' do
+    it 'returns true if pull can be merged' do
+      expect(can_merge_it?(time_line_approved_grouped_by_login)).to eq(true)
+    end
+
+    it 'returns false if pull can not be merged' do
+      expect(can_merge_it?(issue_needs_changes_grouped_by_login)).to eq(false)
+    end
   end
 
-  it 'returns false if pull can not be merged' do
-    result = can_merge_it?(octo_client_not_ready.issue_timeline('org/repo',666))
+  describe '#reviewed_it?' do
+    it "returns false if you didn't reviewed yet" do
+      expect(reviewed_it?(issue_needs_changes_grouped_by_login)).to eq(false)
+    end
 
-    expect(result).to eq(false)
+    it "returns true if you reviewed it" do
+      expect(reviewed_it?(time_line_approved_grouped_by_login)).to eq(true)
+    end
   end
 
-  it "returns false if you didn't reviewed yet" do
-    result = reviewed_it?(octo_client_not_ready.issue_timeline('org/repo',666))
+  describe '#comments?' do
+    it "returns true if you commented it" do
+      expect(comments?(time_line_approved_grouped_by_login)).to eq(true)
+    end
 
-    expect(result).to eq(false)
-  end
-
-  it "returns true if you reviewed it" do
-    result = reviewed_it?(octo_client_ready.issue_timeline('org/repo',666))
-
-    expect(result).to eq(true)
-  end
-
-  it "returns true if you commented it" do
-    result = comments?(octo_client_ready.issue_timeline('org/repo',666))
-
-    expect(result).to eq(true)
-  end
-
-  it "returns false if you didn't commented it" do
-    result = comments?(octo_client_not_ready.issue_timeline('org/repo',666))
-
-    expect(result).to eq(false)
+    it "returns false if you didn't commented it" do
+      expect(comments?(issue_needs_changes_grouped_by_login)).to eq(false)
+    end
   end
 end

@@ -1,7 +1,17 @@
 shared_context "octokit data" do
-  let(:octo_client_ready) {
-    instance_double('Octokit::Client',
-      issue_timeline: [
+
+  let(:client) { instance_double('Octokit::Client') }
+  let(:session) {
+    session = {
+      user: "user",
+      user_id: 666667
+    }
+  }
+
+  before do
+    allow(client).to receive(:issue_timeline)
+      .with('organization/approved', 666)
+      .and_return([
         { user: { login: "user" }, state: 'approved', event: "reviewed" },
         { user: { login: "another_user" }, state: 'approved', event: "reviewed" },
         { user: { login: "one_more_user" }, state: 'approved', event: "reviewed" },
@@ -9,11 +19,10 @@ shared_context "octokit data" do
         { user: { login: "aaand_one_more" }, state: 'approved', event: "reviewed" }
       ]
     )
-  }
 
-  let(:octo_client_not_ready) {
-    instance_double('Octokit::Client',
-      issue_timeline: [
+    allow(client).to receive(:issue_timeline)
+      .with('organization/not_approved', 666)
+      .and_return([
         { user: { login: "user" }, state: 'approved', event: "reviewed" },
         { user: { login: "another_user" }, state: 'approved', event: "reviewed" },
         { user: { login: "one_more_user" }, state: 'approved', event: "reviewed" },
@@ -21,12 +30,5 @@ shared_context "octokit data" do
         { user: { login: "user_asked_changes_too" }, state: 'changes_requested', event: "reviewed" }
       ]
     )
-  }
-
-  let(:session) {
-    session = {
-      user: "user",
-      user_id: 666667
-    }
-  }
+  end
 end
