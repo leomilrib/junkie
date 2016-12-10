@@ -3,7 +3,7 @@ shared_context "octokit data" do
   let(:client) { instance_double('Octokit::Client') }
   let(:session) {
     session = {
-      user: "user",
+      user: "logged_user",
       user_id: 666667
     }
   }
@@ -12,7 +12,7 @@ shared_context "octokit data" do
     allow(client).to receive(:issue_timeline)
       .with('organization/approved', 666)
       .and_return([
-        { user: { login: "user" }, state: 'approved', event: "reviewed" },
+        { user: { login: "logged_user" }, state: 'approved', event: "reviewed" },
         { user: { login: "another_user" }, state: 'approved', event: "reviewed" },
         { user: { login: "one_more_user" }, state: 'approved', event: "reviewed" },
         { user: { login: "user_too" }, state: 'approved', event: "reviewed" },
@@ -26,7 +26,7 @@ shared_context "octokit data" do
         { user: { login: "user" }, state: 'approved', event: "reviewed" },
         { user: { login: "another_user" }, state: 'approved', event: "reviewed" },
         { user: { login: "one_more_user" }, state: 'approved', event: "reviewed" },
-        { user: { login: "user_asked_for_changes" }, state: 'changes_requested', event: "reviewed" },
+        { user: { login: "logged_user" }, state: 'changes_requested', event: "reviewed" },
         { user: { login: "user_asked_changes_too" }, state: 'changes_requested', event: "reviewed" }
       ]
     )

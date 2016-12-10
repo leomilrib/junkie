@@ -13,32 +13,40 @@ describe "app_helper" do
   }
 
   describe '#can_merge_it?' do
-    it 'returns true if pull can be merged' do
+    it 'returns true for issue that can be merged' do
       expect(can_merge_it?(time_line_approved_grouped_by_login)).to eq(true)
     end
 
-    it 'returns false if pull can not be merged' do
+    it 'returns false for issue that can not be merged yet' do
       expect(can_merge_it?(issue_needs_changes_grouped_by_login)).to eq(false)
     end
   end
 
   describe '#reviewed_it?' do
-    it "returns false if you didn't reviewed yet" do
-      expect(reviewed_it?(issue_needs_changes_grouped_by_login)).to eq(false)
+    it "returns false for logged user that didn't reviewed yet issue" do
+      expect(
+        reviewed_it?(issue_needs_changes_grouped_by_login[session[:user]])
+      ).to eq(false)
     end
 
-    it "returns true if you reviewed it" do
-      expect(reviewed_it?(time_line_approved_grouped_by_login)).to eq(true)
+    it "returns true for logged user that reviewed issue already" do
+      expect(
+        reviewed_it?(time_line_approved_grouped_by_login[session[:user]])
+      ).to eq(true)
     end
   end
 
-  describe '#comments?' do
-    it "returns true if you commented it" do
-      expect(comments?(time_line_approved_grouped_by_login)).to eq(true)
+  describe '#asked_for_changes?' do
+    it "returns true for logged user that asked for changes on issue" do
+      expect(
+        asked_for_changes?(time_line_approved_grouped_by_login[session[:user]])
+      ).to eq(true)
     end
 
-    it "returns false if you didn't commented it" do
-      expect(comments?(issue_needs_changes_grouped_by_login)).to eq(false)
+    it "returns false for logged user that didn't asked for changes on issue" do
+      expect(
+        asked_for_changes?(issue_needs_changes_grouped_by_login[session[:user]])
+      ).to eq(false)
     end
   end
 end

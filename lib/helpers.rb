@@ -1,6 +1,6 @@
 module Helpers
-
-  SHIPS_REGEX = /(:\+1:)|(:shipit:)|(:ship:\s*:it:)|(:sheep:\s*:it:)/
+  APPROVED = 'approved'
+  CHANGES_REQUESTED = 'changes_requested'
 
   def logout
     return unless session[:user]
@@ -55,15 +55,13 @@ module Helpers
     client
   end
 
-  def can_merge_it?(issue_comments)
-    approves = issue_comments.select { |ic|
-      SHIPS_REGEX.match ic[:body]
-    }
-
-    (approves.size > 1)
+  def can_merge_it?(grouped_time_line)
+    grouped_time_line.count { |user_login, time_lines|
+      time_lines.any? { |time_line| time_line[:state] == APPROVED }
+    } > 4
   end
 
-  def reviewed_it?(issue_comments)
+  def reviewed_it?(user_time_line)
     ready = issue_comments.select { |ic|
       (ic[:user][:id] == session[:user_id]) && SHIPS_REGEX.match(ic[:body])
     }
@@ -71,7 +69,7 @@ module Helpers
     (ready.size > 0)
   end
 
-  def comments?(pull_comments)
+  def asked_for_changes?(user_time_line)
     commented = pull_comments.select { |pc|
       pc[:user][:id] == session[:user_id]
     }
@@ -79,16 +77,16 @@ module Helpers
     (commented.size > 0)
   end
 
-  def icon_merge(pull)
-    can_merge_it?(pull[:issue_comments]) ? 'merge ready' : 'merge pending'
+  def icon_merge(grouped_time_line)
+    can_merge_it?(grouped_time_line) ? 'merge ready' : 'merge pending'
   end
 
-  def icon_review(pull)
-    reviewed_it?(pull[:issue_comments]) ? 'review ready' : 'review pending'
+  def icon_review(grouped_time_line)
+    reviewed_it?(grouped_time_line[session[:user]]) ? 'review ready' : 'review pending'
   end
 
-  def icon_comment(pull)
-    comments?(pull[:pull_comments]) ? 'comment ready' : 'comment pending'
+  def icon_comment(grouped_time_line)
+    asked_for_changes?(grouped_time_line[session[:user]]) ? 'comment ready' : 'comment pending'
   end
 
   def responsible_info(pull)
