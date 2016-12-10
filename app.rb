@@ -96,26 +96,19 @@ get '/about' do
 end
 
 get '/pull_icons' do
-  from_last_update = params[:updated_at]
-  pull = {}
   client = set_client
-  pull[:issue_comments] = begin
-     client.issue_comments(
-      "#{params[:org]}/#{params[:repo]}",
-      "#{params[:number]}"
-    )
-  rescue
-     []
-  end
-  pull[:pull_comments] = begin
-    client.pull_comments(
+  issue_timeline = begin
+     client.issue_timeline(
       "#{params[:org]}/#{params[:repo]}",
       "#{params[:number]}",
-      options: { since: from_last_update }
+      accept: Octokit::Preview::PREVIEW_TYPES[:issue_timelines]
     )
   rescue
-    []
+     [{}]
   end
+  grouped_timeline = issue_timeline
+    .select { |time_line| time_line[:event] == Helpers::EVENT_REVIEWD }
+    .group_by { |time_line| time_line[:user][:login] }
 
-  erb :'_pull_icons', layout: false, locals: { pull: pull }
+  erb :'_pull_icons', layout: false, locals: { grouped_timeline: grouped_timeline }
 end
