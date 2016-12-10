@@ -2,8 +2,8 @@ ENV['RACK_ENV'] = 'test'
 
 require 'rack/test'
 require 'capybara/dsl'
-require "codeclimate-test-reporter"
-CodeClimate::TestReporter.start
+require 'simplecov'
+SimpleCov.start
 require File.expand_path '../../app.rb', __FILE__
 Dir["./spec/support/**/*.rb"].each { |f| require f }
 
