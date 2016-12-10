@@ -1,6 +1,8 @@
 shared_context "octokit data" do
   let(:octo_client_ready) {
     instance_double('Octokit::Client',
+      issue_timeline: [
+      ],
       issue_comments: [
         {
           html_url:'https://github.com/org/repo/pull/666#issuecomment-666666',
@@ -72,6 +74,8 @@ shared_context "octokit data" do
 
   let(:octo_client_not_ready) {
     instance_double('Octokit::Client',
+      issue_timeline: [
+      ],
       issue_comments: [
         {
           html_url:'https://github.com/org/repo/pull/666#issuecomment-666666',
