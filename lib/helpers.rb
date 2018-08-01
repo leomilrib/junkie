@@ -10,7 +10,7 @@ module Helpers
   end
 
   def app_root
-    "#{env['rack.url_scheme']}://#{env['HTTP_HOST']}"
+    "https://#{env['HTTP_HOST']}"
   end
 
   def big_ass_random_string
